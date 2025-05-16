@@ -20,7 +20,7 @@ on:
 
 jobs:
   playwright-tests:
-    name: 'Playwright Tests - ${{ github.event_name == "workflow_dispatch" && github.event.inputs.browser || "based on event" }}'
+    name: "Playwright Tests - ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.browser || 'based on event' }}"
     runs-on: ubuntu-latest
     
     # Add environment variables using repository secrets
