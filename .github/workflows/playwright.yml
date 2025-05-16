@@ -25,8 +25,8 @@ jobs:
     
     # Add environment variables using repository secrets
     env:
-      SAUCE_UI_USER: ${{ secrets.SAUCEUIUSER }}
-      SAUCE_UI_PASSWORD: ${{ secrets.SAUCEUIPASSWORD }}
+      SAUCEUIUSER: ${{ secrets.SAUCEUIUSER }}
+      SAUCEUIPASSWORD: ${{ secrets.SAUCEUIPASSWORD }}
     
     steps:
       - uses: actions/checkout@v4
