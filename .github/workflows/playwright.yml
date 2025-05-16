@@ -1,0 +1,74 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: 'Browser to run tests on'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - chromium
+          - firefox
+          - webkit
+
+jobs:
+  playwright-tests:
+    name: "Playwright Tests - ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.browser || 'based on event' }}"
+    runs-on: ubuntu-latest
+    
+    # Add environment variables using repository secrets
+    env:
+      SAUCEUIUSER: ${{ secrets.SAUCEUIUSER }}
+      SAUCEUIPASSWORD: ${{ secrets.SAUCEUIPASSWORD }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+      
+      # Run Chromium tests on push events
+      - name: Run Chromium tests on push
+        if: github.event_name == 'push'
+        run: npx playwright test --config=playwright.config.ts --project=chromium
+      
+      # Run tests based on workflow_dispatch input
+      - name: Run tests on selected browser
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.browser != 'all'
+        run: npx playwright test --config=playwright.config.ts --project=${{ github.event.inputs.browser }}
+      
+      # Run all browser tests for workflow_dispatch with 'all' option
+      - name: Run all browser tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.browser == 'all'
+        run: npx playwright test --config=playwright.config.ts
+      
+      # Run Chromium tests on PR
+      - name: Run Chromium tests on PR
+        if: github.event_name == 'pull_request'
+        run: npx playwright test --config=playwright.config.ts --project=chromium
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
