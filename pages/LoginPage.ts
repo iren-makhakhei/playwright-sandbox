@@ -24,4 +24,8 @@ export class LoginPage {
     async getLoginErrorMessage() {
         return await this.loginErrorMessage.textContent();
     }
+
+    getLoginErrorMessageLocator() {
+        return this.loginErrorMessage;
+    }
 }
