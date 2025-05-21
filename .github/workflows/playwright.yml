@@ -51,6 +51,12 @@ jobs:
         
       - name: Install Playwright browsers
         run: npx playwright install
+
+      - name: Install dependencies for browsers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgles2 libx264-160
+
       
       # Run UI tests on push events
       - name: Run UI tests on push (Chromium)
