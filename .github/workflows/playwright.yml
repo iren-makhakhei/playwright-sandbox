@@ -50,7 +50,7 @@ jobs:
         run: npm ci
         
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install
       
       # Run UI tests on push events
       - name: Run UI tests on push (Chromium)
