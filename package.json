@@ -6,7 +6,7 @@
   "scripts": {
     "test:ui": "playwright test --config=playwright.config.ts",
     "test:visual": "playwright test --config=visual.config.ts",
-    "visual:upd_scrshts": "playwright test --config=visual.config.ts  --update-snapshots" 
+    "test:visual:update-snapshots": "playwright test --config=visual.config.ts  --update-snapshots" 
   },
   "author": "Irene",
   "license": "ISC",
