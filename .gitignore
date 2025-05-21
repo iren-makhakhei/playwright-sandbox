@@ -9,6 +9,8 @@ yarn.lock
 /test-results/
 /playwright-report/
 /playwright/.cache/
+# DO NOT ignore snapshot reference files
+!**/*-snapshots/
 
 # Build
 /dist/
