@@ -59,9 +59,9 @@ jobs:
             gstreamer1.0-plugins-base \
             gstreamer1.0-plugins-good \
             gstreamer1.0-plugins-ugly
-          sudo apt-get install libgtk-4-1\                 ║
-    ║         libwoff1\                                    ║
-    ║         libevent-2.1-7t64   
+          sudo apt-get install libgtk-4-1\                 
+             libwoff1\                                    
+             libevent-2.1-7t64   
       
       - name: Verify dependencies
         run: |
