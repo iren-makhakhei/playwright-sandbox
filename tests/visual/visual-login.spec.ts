@@ -14,7 +14,7 @@ test.describe.parallel('Sample Test Suite', () => {
     
   });
 
-  test('Postive Login Scenario', async ({ page }) => {
+  test('Positive Login Scenario', async ({ page }) => {
     expect(await page.screenshot()).toMatchSnapshot('loginpage.png');
   });
 
