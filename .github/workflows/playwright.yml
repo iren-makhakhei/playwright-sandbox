@@ -48,7 +48,15 @@ jobs:
           sudo apt-get install -y libhyphen-dev  
           sudo apt-get install -y libmanette-0.2-0
           sudo apt-get install -y libharfbuzz-icu0
-          sudo apt-get install -y libsecret-1-0      
+          sudo apt-get install -y libsecret-1-0
+          sudo apt-get install -y libflite1
+          sudo apt-get install -y libavif-dev   
+
+      
+      - name: Verify dependencies
+        run: |
+          ldconfig -p | grep flite
+          ldconfig -p | grep avif   
       
       - name: Set up Node.js
         uses: actions/setup-node@v4
