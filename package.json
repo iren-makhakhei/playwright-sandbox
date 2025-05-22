@@ -4,7 +4,9 @@
   "description": "Playwright playground",
   "main": "index.js",
   "scripts": {
-    "test:ui": "playwright test --config=playwright.config.ts"
+    "test:ui": "playwright test --config=playwright.config.ts",
+    "test:visual": "playwright test --config=visual.config.ts",
+    "test:visual:update-snapshots": "playwright test --config=visual.config.ts  --update-snapshots" 
   },
   "author": "Irene",
   "license": "ISC",
