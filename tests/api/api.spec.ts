@@ -17,7 +17,8 @@ test.describe.parallel('API Testing', () => {
     const createResponse = await request.post(`/api/users`, { data: user });
     expect(createResponse.status()).toBe(201);
   
-    const createResponseBody = JSON.parse(await createResponse.text());
+    //const createResponseBody = JSON.parse(await createResponse.text());
+    const createResponseBody = await createResponse.json();
     expect(createResponseBody.name).toBe(user.name);
     expect(createResponseBody.job).toBe(user.job);
     expect(createResponseBody.createdAt).toBeTruthy();
@@ -28,7 +29,8 @@ test.describe.parallel('API Testing', () => {
     const response = await request.get(`/api/users?page=2`);
     expect(response.status()).toBe(200);
   
-    const responseBody = JSON.parse(await response.text());
+    //const responseBody = JSON.parse(await response.text());
+    const responseBody = await response.json();
     expect(responseBody.page).toBe(2);
     expect(responseBody.per_page).toBe(6);
     expect(responseBody.total).toBe(12);
@@ -44,7 +46,8 @@ test.describe.parallel('API Testing', () => {
     const updateResponse = await request.put(`/api/users/2`, { data: user });
     expect(updateResponse.status()).toBe(200);
   
-    const updateResponseBody = JSON.parse(await updateResponse.text());
+    //const updateResponseBody = JSON.parse(await updateResponse.text());
+    const updateResponseBody = await updateResponse.json();
     expect(updateResponseBody.name).toBe(user.name);
     expect(updateResponseBody.job).toBe(user.job);
   });
