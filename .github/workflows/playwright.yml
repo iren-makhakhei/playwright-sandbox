@@ -25,6 +25,8 @@ on:
         options:
           - ui
           - visual
+          - api
+          - all
           - update_screenshots
 
 jobs:
@@ -39,34 +41,6 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-
-      # - name: Install dependencies 
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y libgles2
-      #     sudo apt-get install -y libx264-dev
-      #     sudo apt-get install -y libhyphen-dev  
-      #     sudo apt-get install -y libmanette-0.2-0
-      #     sudo apt-get install -y libharfbuzz-icu0
-      #     sudo apt-get install -y libsecret-1-0
-      #     sudo apt-get install -y libflite1
-      #     sudo apt-get install -y libavif-dev
-      #     sudo apt-get install -y \
-      #       libgstreamer1.0-0 \
-      #       libgstreamer-plugins-base1.0-0 \
-      #       gstreamer1.0-libav \
-      #       gstreamer1.0-plugins-bad \
-      #       gstreamer1.0-plugins-base \
-      #       gstreamer1.0-plugins-good \
-      #       gstreamer1.0-plugins-ugly
-      #     sudo apt-get install libgtk-4-1\                 
-      #        libwoff1\                                    
-      #        libevent-2.1-7t64   
-      
-      # - name: Verify dependencies
-      #   run: |
-      #     ldconfig -p | grep flite
-      #     ldconfig -p | grep avif   
       
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -80,6 +54,8 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
       
+      # ---------- PUSH EVENT TESTS ----------
+      
       # Run UI tests on push events
       - name: Run UI tests on push (Chromium)
         if: github.event_name == 'push'
@@ -90,40 +66,61 @@ jobs:
         if: github.event_name == 'push'
         run: npx playwright test --config=visual.config.ts --project=chromium
       
+      # Run API tests on push events
+      - name: Run API tests on push
+        if: github.event_name == 'push'
+        run: npx playwright test --config=api.config.ts
+      
+      # ---------- PULL REQUEST TESTS ----------
+      
+      # Run UI tests on PR
+      - name: Run UI tests on PR
+        if: github.event_name == 'pull_request'
+        run: npx playwright test --config=playwright.config.ts --project=chromium
+      
+      # Run Visual tests on PR
+      - name: Run Visual tests on PR
+        if: github.event_name == 'pull_request'
+        run: npx playwright test --config=visual.config.ts --project=chromium
+      
+      # Run API tests on PR
+      - name: Run API tests on PR
+        if: github.event_name == 'pull_request'
+        run: npx playwright test --config=api.config.ts
+      
+      # ---------- MANUAL DISPATCH TESTS ----------
+      
       # Run UI tests based on workflow_dispatch input
       - name: Run UI tests on selected browser
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.test_type == 'ui' && github.event.inputs.browser != 'all'
+        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.test_type == 'ui' || github.event.inputs.test_type == 'all') && github.event.inputs.browser != 'all'
         run: npx playwright test --config=playwright.config.ts --project=${{ github.event.inputs.browser }}
       
       # Run UI tests on all browsers
       - name: Run UI tests on all browsers
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.test_type == 'ui' && github.event.inputs.browser == 'all'
+        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.test_type == 'ui' || github.event.inputs.test_type == 'all') && github.event.inputs.browser == 'all'
         run: npx playwright test --config=playwright.config.ts
       
       # Run Visual tests based on workflow_dispatch input
       - name: Run Visual tests on selected browser
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.test_type == 'visual' && github.event.inputs.browser != 'all'
+        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.test_type == 'visual' || github.event.inputs.test_type == 'all') && github.event.inputs.browser != 'all'
         run: npx playwright test --config=visual.config.ts --project=${{ github.event.inputs.browser }}
       
       # Run Visual tests on all browsers
       - name: Run Visual tests on all browsers
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.test_type == 'visual' && github.event.inputs.browser == 'all'
+        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.test_type == 'visual' || github.event.inputs.test_type == 'all') && github.event.inputs.browser == 'all'
         run: npx playwright test --config=visual.config.ts
+      
+      # Run API tests based on workflow_dispatch input
+      - name: Run API tests
+        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.test_type == 'api' || github.event.inputs.test_type == 'all')
+        run: npx playwright test --config=api.config.ts
       
       # Update screenshots (manual dispatch only)
       - name: Update Visual test screenshots
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.test_type == 'update_screenshots'
         run: npx playwright test --config=visual.config.ts --update-snapshots ${{ github.event.inputs.browser != 'all' && format('--project={0}', github.event.inputs.browser) || '' }}
       
-      # Run UI tests on PR
-      - name: Run UI tests on PR
-        if: github.event_name == 'pull_request'
-        run: npx playwright test --config=playwright.config.ts --project=chromium
-
-      # Run Visual tests on PR
-      - name: Run Visual tests on PR
-        if: github.event_name == 'pull_request'
-        run: npx playwright test --config=visual.config.ts --project=chromium
+      # ---------- ARTIFACTS ----------
       
       - name: Upload test results
         if: always()
