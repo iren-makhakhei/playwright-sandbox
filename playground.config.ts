@@ -5,6 +5,7 @@ export default defineConfig({
   testMatch: '**/*spec.ts',  // Updated to match TypeScript files
   timeout: 30000,
   retries: 0,
+  reporter: './reporter.ts', 
   use: {
     headless: true,
     actionTimeout: 15000,

@@ -10,6 +10,7 @@ yarn-error.log
 /playwright/.cache/
 # DO NOT ignore snapshot reference files
 !**/*-snapshots/
+testResult.json
 
 # Build
 /dist/

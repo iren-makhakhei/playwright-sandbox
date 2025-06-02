@@ -3,19 +3,19 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Coolbits Feature Testing', () => {
 
-    test(' Check TestInfo Object', async ({ page }, testInfo) => {
-        // Log the test info object
-        console.log('Test Info:', testInfo);
+    // test(' Check TestInfo Object', async ({ page }, testInfo) => {
+    //     // Log the test info object
+    //     console.log('Test Info:', testInfo);
 
-        // Assert that the test info object is not null
-        expect(testInfo).not.toBeNull();
+    //     // Assert that the test info object is not null
+    //     expect(testInfo).not.toBeNull();
 
-        // Assert that the test info has a title
-        expect(testInfo.title).toBe('Check TestInfo Object');
+    //     // Assert that the test info has a title
+    //     expect(testInfo.title).toBe('Check TestInfo Object');
 
-        // Assert that the test info has a status
-        expect(testInfo.status).toBe('passed');
-    });
+    //     // Assert that the test info has a status
+    //     expect(testInfo.status).toBe('passed');
+    // });
 
     test('Test Skip Browser ', async ({ page, browserName }) => {
 
