@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: '0 0 * * *'   # Run at 12:00 AM UTC every day
+    - cron: '0 12 * * *'  # Run at 12:00 PM UTC every day
   workflow_dispatch:
     inputs:
       browser:
@@ -31,7 +34,7 @@ on:
 
 jobs:
   playwright-tests:
-    name: "Playwright Tests - ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.browser || 'based on event' }}"
+    name: "Playwright Tests - ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.browser || github.event_name == 'schedule' && 'scheduled API tests' || 'based on event' }}"
     runs-on: ubuntu-latest
     
     # Add environment variables using repository secrets
@@ -53,6 +56,13 @@ jobs:
         
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
+      
+      # ---------- SCHEDULED TESTS ----------
+      
+      # Run API tests on schedule (12 AM and 12 PM UTC daily)
+      - name: Run scheduled API tests (twice daily)
+        if: github.event_name == 'schedule'
+        run: npx playwright test --config=api.config.ts
       
       # ---------- PUSH EVENT TESTS ----------
       
