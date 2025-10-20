@@ -12,7 +12,7 @@
   "author": "Irene",
   "license": "ISC",
   "dependencies": {
-    "@playwright/test": "^1.52.0",
+    "@playwright/test": "^1.56.1",
     "prettier": "^3.5.3"
   },
   "devDependencies": {
